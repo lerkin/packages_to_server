@@ -218,7 +218,6 @@ void resp_db::InsertSpatialData(const __GUID& GUID, const fs::path& mapInfoDirec
 			}
 			
 			psInsertCadastralGeometry->executeUpdate();
-			session->execute("COMMIT");
 		}
 	}
 
