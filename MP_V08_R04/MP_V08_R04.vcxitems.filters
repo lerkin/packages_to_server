@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="schemas">
+      <UniqueIdentifier>{7b10193c-15b1-42e0-a591-3f501a2716ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="documents">
+      <UniqueIdentifier>{0e00ff0d-53cc-480a-9d6e-590f3549bcb0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)_AddressInp_v09.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_AddressOut_v05.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_AddressOut_v06.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_AssignationFlat_v02.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_AssignationFlat_v03.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_CadastralCostList_v02.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_CadastralCostList_v03.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_CadastralEngineer_v07.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_CadastralNumbers_v02.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_Document_v09.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_DocumentOut_v05.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_DocumentOut_v06.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_ForestUseParcel_v01.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_GeneralCadastralWorks_v04.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_NaturalObjectsOut_v02.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_NaturalObjectsOut_v03.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_NumbersInp_v03.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_ParametersOKSOut_v02.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_ParametersOKSOut_v03.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)_Spatial_v08.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ListForRating_v04.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ListForRating_v05.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)MP_v08.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)P_AllSimpleType_v03.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)P_CommonSimpleTypeAll_v01.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)catalogs.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)schemas\Описание_структуры_ListForRating_v04.docx">
+      <Filter>documents</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)schemas\Описание_структуры_MP_v08.doc">
+      <Filter>documents</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)schemas\Содержание P_CommonSimpleTypeAll.doc">
+      <Filter>documents</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)schemas\Описание_структуры_ListForRating_v05.docx">
+      <Filter>documents</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)schemas\Содержание P_AllSimpleType_v03.doc">
+      <Filter>documents</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)schemas\Описание_структуры_ListForRating_v03.docx">
+      <Filter>documents</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_AddressInp_v09.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_AddressOut_v05.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_AddressOut_v06.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_AssignationFlat_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_AssignationFlat_v03.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_CadastralCostList_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_CadastralCostList_v03.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_CadastralEngineer_v07.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_CadastralNumbers_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_Document_v09.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_DocumentOut_v05.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_DocumentOut_v06.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_ForestUseParcel_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_GeneralCadastralWorks_v04.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_NaturalObjectsOut_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_NaturalObjectsOut_v03.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_NumbersInp_v03.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_ParametersOKSOut_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_ParametersOKSOut_v03.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\_Spatial_v08.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dAllDocuments_v05.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dAllowedUse_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dAppliedFiles_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dArea_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dAssBuilding_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dAssFlat_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dAssFlatType_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dBoundaryType_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dCategories_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dCultural_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dEncumbrances_v04.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dEncumbrances_v06.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dForestCategoryProtective_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dForestEncumbrances_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dForestUse_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dFormEvents_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dFunctionLand_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dGeopointOpred_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dInspection_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dMethod_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dNaturalObjects_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dNetworkPoints_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dOldNumber_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dParcels_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dRealty_v04.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dRegionsRF_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dSpecialTypeFlat_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dTypeParameter_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dTypeStorey_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dUseAppartBuild_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dUseAppartBuild_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dUtilizations_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dWall_v02.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\dWaterObjectType_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\ListForRating_v04.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\ListForRating_v05.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\MP_v08.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\P_AllSimpleType_v03.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\P_CommonSimpleTypeAll_v01.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+    <Xsd Include="$(MSBuildThisFileDirectory)schemas\ListForRating_v03.xsd">
+      <Filter>schemas</Filter>
+    </Xsd>
+  </ItemGroup>
+</Project>
