@@ -1,23 +1,5 @@
 #pragma once
 
-struct archfile
-{
-	std::string GUID;
-	std::string fname;
-	uint64_t fsize;
-	time_t fdatetime;
-	int fcrc;
-	void* fcontent{ nullptr };
-
-	std::string datetime();
-
-	~archfile()
-	{
-		if (fcontent)
-			delete fcontent;
-	}
-};
-
 class PreparedStatementQuery
 {
 	mysql_session::prepared_statement_ptr stmt{ nullptr };
@@ -119,14 +101,6 @@ protected:
 	using __GUID = std::pair<std::string, std::string>;
 	using __GUID_cref = const __GUID&;
 
-	std::string getUUID()
-	{
-		auto UUID = session->executeQuery("SELECT UUID()");
-		UUID->first();
-
-		return UUID->getString(1);
-	}
-
 	bool checkCatalog(const std::string& table, const std::string& code)
 	{
 		std::stringstream query;
@@ -175,6 +149,11 @@ protected:
 public:
 	virtual ~LFRTraits();
 
-	virtual void parse(const pugi::xml_document*) = 0;
+	virtual void parse(std::shared_ptr<pugi::xml_document>) = 0;
 	virtual void insert(const std::string&) = 0;
+	
+	static std::string getGUID()
+	{
+		return xg::newGuid().str();
+	}
 };

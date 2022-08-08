@@ -1,4 +1,4 @@
-#include "pch.h"
+#include <pch.h>
 #include "ListForRating_v04.h"
 
 LFR04_BEGIN
@@ -1788,7 +1788,7 @@ void ListForRating::insertParentOKS(__GUID_cref GUID, const tParentOKS& ParentOK
 	if (ParentOKS.empty())
 		return;
 
-	__GUID ParentGUID{ getUUID(), GUID.second };
+	__GUID ParentGUID{ getGUID(), GUID.second };
 
 	psInsertParentOKS->setString(1, GUID.first);
 	psInsertParentOKS->setString(2, GUID.second);
@@ -1897,7 +1897,7 @@ void ListForRating::insertLevel(__GUID_cref GUID, const tLevel& Level)
 	if (Level.empty())
 		return;
 
-	__GUID LevelGUID{ getUUID(), GUID.second };
+	__GUID LevelGUID{ getGUID(), GUID.second };
 
 	psInsertLevel->setString(1, GUID.first);
 	psInsertLevel->setString(2, GUID.second);
@@ -1920,7 +1920,7 @@ void ListForRating::insertSubConstructions(__GUID_cref GUID, const tSubConstruct
 	if (SubConstructions.empty())
 		return;
 
-	__GUID SubConstructionGUID{ getUUID(), GUID.second };
+	__GUID SubConstructionGUID{ getGUID(), GUID.second };
 
 	psInsertSubConstruction->setString(1, GUID.first);
 	psInsertSubConstruction->setString(2, GUID.second);
@@ -2013,7 +2013,7 @@ void ListForRating::insertCulturalHeritage(__GUID_cref GUID, const tCulturalHeri
 	if (CulturalHeritage.empty())
 		return;
 
-	__GUID CulturalHeritageGUID{ getUUID(), GUID.second };
+	__GUID CulturalHeritageGUID{ getGUID(), GUID.second };
 
 	psInsertCulturalHeritage->setString(1, GUID.first);
 	psInsertCulturalHeritage->setString(2, GUID.second);
@@ -2041,7 +2041,7 @@ void ListForRating::insertSubBuildings(__GUID_cref GUID, const tSubBuildingFlats
 
 	for (auto& SubBuildingFlat : SubBuildingFlats)
 	{
-		__GUID SubBuildingFlatGUID{ getUUID(), GUID.second };
+		__GUID SubBuildingFlatGUID{ getGUID(), GUID.second };
 
 		psInsertSubBuildings->setNull(3, sql::DataType::DECIMAL);
 		psInsertSubBuildings->setNull(4, sql::DataType::VARCHAR);
@@ -2399,7 +2399,7 @@ void ListForRating::insertNaturalObjects(__GUID_cref GUID, const tNaturalObjects
 		if (NaturalObject.CharOther)
 			psInsertNaturalObject->setString(11, NaturalObject.CharOther);
 
-		__GUID NaturalObjectGUID{ getUUID(), GUID.second };
+		__GUID NaturalObjectGUID{ getGUID(), GUID.second };
 
 		if (not NaturalObject.ForestEncumbrances.empty())
 			psInsertNaturalObject->setString(12, NaturalObjectGUID.first);
@@ -2494,7 +2494,7 @@ void ListForRating::insertSubParcels(__GUID_cref GUID, const tSubParcels& SubPar
 	psInsertSubParcel->setString(1, GUID.first);
 	psInsertSubParcel->setString(2, GUID.second);
 
-	__GUID SubParcelGUID{ getUUID(),GUID.second };
+	__GUID SubParcelGUID{ getGUID(), GUID.second };
 
 	for (auto& SubParcel : SubParcels)
 	{
@@ -2553,7 +2553,7 @@ void ListForRating::insertZonesAndTerritories(__GUID_cref GUID, const tZonesAndT
 
 		if (not ZoneAndTerritory.Document.empty())
 		{
-			__GUID ZoneAndTerritoryGUID{ getUUID(), GUID.second };
+			__GUID ZoneAndTerritoryGUID{ getGUID(), GUID.second };
 
 			psInsertZoneAndTerritory->setString(8, ZoneAndTerritoryGUID.first);
 			psInsertZoneAndTerritory->executeUpdate();
@@ -2570,7 +2570,7 @@ void ListForRating::insertGovernmentLandSupervision(__GUID_cref GUID, const tGov
 	if (GovernmentLandSupervisions.empty())
 		return;
 
-	__GUID SupervisionEventGUID{ getUUID(), GUID.second };
+	__GUID SupervisionEventGUID{ getGUID(), GUID.second };
 
 	psInsertGovernmentLandSupervision->setString(1, GUID.first);
 	psInsertGovernmentLandSupervision->setString(2, GUID.second);
@@ -2617,7 +2617,7 @@ void ListForRating::insertSurveyingProject(__GUID_cref GUID, const tSurveyingPro
 	if (SurveyingProject.empty())
 		return;
 
-	__GUID SurveyingProjectGUID{ getUUID(), GUID.second };
+	__GUID SurveyingProjectGUID{ getGUID(), GUID.second };
 
 	psInsertSurveyingProject->setString(1, GUID.first);
 	psInsertSurveyingProject->setString(2, GUID.second);
@@ -2637,7 +2637,7 @@ void ListForRating::insertHiredHouse(__GUID_cref GUID, const tHiredHouse& HiredH
 	if (!HiredHouse.UseHiredHouse)
 		return;
 
-	__GUID HiredHouseGUID{ getUUID(),GUID.second };
+	__GUID HiredHouseGUID{ getGUID(), GUID.second };
 
 	psInsertHiredHouse->setString(1, GUID.first);
 	psInsertHiredHouse->setString(2, GUID.second);
@@ -2652,7 +2652,7 @@ void ListForRating::insertHiredHouse(__GUID_cref GUID, const tHiredHouse& HiredH
 
 void ListForRating::insertMunicipalHouse(__GUID_cref GUID, const tHiredHouse::__MunicipalHouse& MunicipalHouse)
 {
-	__GUID MunicipalHouseGUID{ getUUID(),GUID.second };
+	__GUID MunicipalHouseGUID{ getGUID(), GUID.second };
 
 	psInsertMunicipalHouse->setString(1, GUID.first);
 	psInsertMunicipalHouse->setString(2, GUID.second);
@@ -2667,7 +2667,7 @@ void ListForRating::insertMunicipalHouse(__GUID_cref GUID, const tHiredHouse::__
 
 void ListForRating::insertOwnerHouse(__GUID_cref GUID, const tHiredHouse::__OwnerHouse& OwnerHouse)
 {
-	__GUID OwnerHouseGUID{ getUUID(),GUID.second };
+	__GUID OwnerHouseGUID{ getGUID(), GUID.second };
 
 	psInsertOwnerHouse->setString(1, GUID.first);
 	psInsertOwnerHouse->setString(2, GUID.second);
@@ -2696,7 +2696,7 @@ void ListForRating::insertEncumbrancesZU(__GUID_cref GUID, const tEncumbrancesZU
 	if (Encumbrances.empty())
 		return;
 
-	__GUID EncumbranceZUGUID{ getUUID(),GUID.second };
+	__GUID EncumbranceZUGUID{ getGUID(), GUID.second };
 
 	psInsertEncumbranceZU->setString(1, GUID.first);
 	psInsertEncumbranceZU->setString(2, GUID.second);
@@ -2739,7 +2739,7 @@ void ListForRating::insertEncumbrancesOKS(__GUID_cref GUID, const tEncumbrancesO
 	if (Encumbrances.empty())
 		return;
 
-	__GUID EncumbranceOKSGUID{ getUUID(), GUID.second };
+	__GUID EncumbranceOKSGUID{ getGUID(), GUID.second };
 
 	psInsertEncumbranceOKS->setString(1, GUID.first);
 	psInsertEncumbranceOKS->setString(2, GUID.second);
@@ -2840,7 +2840,7 @@ void ListForRating::insertResultsEvent(__GUID_cref GUID, const tResultsEvent& Re
 	if (ResultsEvent.empty())
 		return;
 
-	__GUID ResultsEventGUID{ getUUID(),GUID.second };
+	__GUID ResultsEventGUID{ getGUID(), GUID.second };
 
 	psInsertResultsEvent->setString(1, GUID.first);
 	psInsertResultsEvent->setString(2, GUID.second);
@@ -2941,7 +2941,7 @@ void ListForRating::insertNumberType(__GUID_cref GUID, const std::string& FieldN
 }
 
 // ---------------------------------------------------------------------------
-void ListForRating::parse(const pugi::xml_document* document)
+void ListForRating::parse(std::shared_ptr<pugi::xml_document> document)
 {
 	auto node = document->child("ListForRating");
 
@@ -3211,7 +3211,7 @@ ListForRating::ListForRating()
 				VALUE(?, ?, ?)");
 }
 
-ListForRating::ListForRating(const pugi::xml_document* document)
+ListForRating::ListForRating(std::shared_ptr<pugi::xml_document> document)
 {
 	parse(document);
 }

@@ -14,12 +14,11 @@ public:
 	AppForm(wxWindow*, wxWindowID);
 	~AppForm();
 	
+	template <typename _Ty>
+	void LoadPackages(std::shared_ptr<_Ty>);
+
 	void MakeMainMenu();
-	void LoadZipPackage();
-	void LoadPackages();
-//	void LoadSoilCard();
-//	void LoadGNPSDB();
-	
+
 protected:
 	pWxMenuBar menuBar;
 	pWxMenu mbFile, mbHelp;

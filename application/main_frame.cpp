@@ -1,10 +1,9 @@
-#include "pch.h"
+#include <pch.h>
 #include "main_frame.h"
-//#include "mi.h"
 #include "rc.h"
 
 AppForm::AppForm(wxWindow* parent, wxWindowID id)
-	: wxFrame(parent, id, "Загрузка XML-пакетов")
+	: wxFrame(parent, id, wxT("Загрузка XML-пакетов"))
 {
 	SetSizeHints(wxDefaultSize, wxDefaultSize);
 	MakeMainMenu();
@@ -21,10 +20,10 @@ void AppForm::MakeMainMenu()
 	mbFile = new wxMenu();
 	mbHelp = new wxMenu();
 
-	pWxMenuItem mbFileOpen	= new wxMenuItem(mbFile,	wxID_OPEN,	wxT("&Загрузка..."));
+	pWxMenuItem mbFileOpen	= new wxMenuItem(mbFile,	0x3000,			wxT("&Загрузка..."));
 	pWxMenuItem mbFilePack	= new wxMenuItem(mbFile,	0x3001,			wxT("&Пакетная загрузка..."));
-	pWxMenuItem mbFileSoil	= new wxMenuItem(mbFile,	0x3000,			wxT("Загрузка &почвенной карты"));
-	pWxMenuItem mbFileGNPS	= new wxMenuItem(mbFile,	0x3002,			wxT("Загрузка базы по СНТ"));
+	pWxMenuItem mbFileSoil	= new wxMenuItem(mbFile,	0x3002,			wxT("Загрузка &почвенной карты"));
+	pWxMenuItem mbFileGNPS	= new wxMenuItem(mbFile,	0x3003,			wxT("Загрузка базы по СНТ"));
 	pWxMenuItem mbFileExit	= new wxMenuItem(mbFile,	wxID_EXIT,	wxT("В&ыход"));
 	pWxMenuItem mbHelpHelp	= new wxMenuItem(mbHelp,	wxID_HELP,	wxT("&Помощь"));
 	pWxMenuItem mbHelpAbout = new wxMenuItem(mbHelp,	wxID_ABOUT, wxT("&О программе..."));
@@ -63,154 +62,44 @@ void AppForm::MakeMainMenu()
 }
 
 // ---------------------------------------------------------------------------
-void AppForm::LoadZipPackage()
+template <typename _Ty>
+void AppForm::LoadPackages(std::shared_ptr<_Ty> dialog)
 {
-	wxString filename;
+	wxString sourceName;
 
-	auto openFileDialog{ new wxFileDialog(this) };
-	if (wxID_OK == openFileDialog->ShowModal())
-		filename = openFileDialog->GetPath();
-
-	delete openFileDialog;
-
-	if (filename.empty())
+	if (wxID_OK == dialog->ShowModal())
+		sourceName = dialog->GetPath();
+	else
 		return;
 
-	try {
-		session->execute("START TRANSACTION");
-		resp_db db;
-		db.insert_package(filename);
-		session->execute("COMMIT");
+	try
+	{
+		if constexpr (std::is_same_v<_Ty, wxFileDialog>)
+		{
+			resp_db db;
+			db.insert_package(sourceName);
+		}
+		else if constexpr (std::is_same_v<_Ty, wxDirDialog>)
+		{
+			for (auto& entry : fs::directory_iterator(fs::path(sourceName.ToStdString())))
+			{
+				resp_db db;
+				db.insert_package(entry.path().c_str());
+			}
+		}
 	}
 	catch (sql::SQLException& err)
 	{
 		std::ostringstream message;
-		message << "SQLSTATE[" << err.getSQLState() << "]: General error #" << err.getErrorCode() << ": " << err.what() << std::endl;
+		message << "SQLSTATE [" << err.getSQLState() << "]: General error #" << err.getErrorCode() << ": " << err.what() << std::endl;
 		wxMessageBox(message.str(), "MySQL Connector error", wxICON_ERROR | wxCLOSE);
+		session->execute("ROLLBACK");
 	}
 	catch (ListForRatingException& err)
 	{
 		wxMessageBox(wxString(err.what()), err.what_code());
 		session->execute("ROLLBACK");
 	}
-}
-
-void AppForm::LoadPackages()
-{
-	wxString directory;
-
-	auto openDirectory{ new wxDirDialog(this) };
-	if (wxID_OK == openDirectory->ShowModal())
-		directory = openDirectory->GetPath();
-
-	delete openDirectory;
-
-	if (directory.empty())
-		return;
-
-	for (auto entry : fs::directory_iterator(fs::path(std::string(directory))))
-	{
-		console->WriteText(entry.path().c_str());
-		console->Newline();
-
-		try
-		{
-			resp_db db;
-			session->execute("START TRANSACTION");
-			db.insert_package(entry.path().c_str());
-			session->execute("COMMIT");
-		}
-		catch (sql::SQLException& err)
-		{
-			std::ostringstream message;
-			message << "SQLSTATE[" << err.getSQLState() << "]: General error #" << err.getErrorCode() << ": " << err.what() << std::endl;
-			wxMessageBox(message.str(), "MySQL Connector error", wxICON_ERROR | wxCLOSE);
-			session->execute("ROLLBACK");
-		}
-		catch (ListForRatingException& err)
-		{
-			wxMessageBox(wxString(err.what()), err.what_code());
-			session->execute("ROLLBACK");
-		}
-	}
-}
-/*
-void AppForm::LoadSoilCard()
-{
-	wxString filename;
-
-	auto openFileDialog{ new wxFileDialog(this) };
-	if (wxID_OK == openFileDialog->ShowModal())
-		filename = openFileDialog->GetPath();
-
-	delete openFileDialog;
-
-	if (filename.empty())
-		return;
-
-	fs::path file{ std::string(filename) };
-	fs::current_path(file.parent_path());
-
-	mid_mif_data data(file.stem());
-	mid_mif fn(std::string((const char* const)data.mid_file.ptr, data.mid_file.size),
-						 std::string((const char* const)data.mif_file.ptr, data.mif_file.size));
-
-	auto query = session->prepareStatement("\
-		INSERT INTO soil_db.map(ID, SoilContourNum, SoilCode, SoilIndex, TabNum, SoilVarietyNum, Data)\
-			VALUE(?, ?, ?, ?, ?, ?, ?)");
-
-	for (auto& region : fn.Data)
-	{
-		query->setNull(1, sql::DataType::INTEGER);	// ID
-		query->setNull(2, sql::DataType::INTEGER);	// SoilContourNum
-		query->setNull(3, sql::DataType::INTEGER);	// SoilCode
-		query->setNull(4, sql::DataType::VARCHAR);	// SoilIndex
-		query->setNull(5, sql::DataType::INTEGER);	// TabNum
-		query->setNull(6, sql::DataType::INTEGER);	// SoilVarietyNum
-		query->setNull(7, sql::DataType::GEOMETRY);	// Data
-
-		if (not region->desc[0].empty())	// ID
-			query->setUInt(1, std::stoul(region->desc[0]));
-
-		if (not region->desc[1].empty())	// SoilContourNum
-			query->setUInt(2, std::stoul(region->desc[1]));
-		
-		if (not region->desc[2].empty())	// SoilCode
-			query->setUInt(3, std::stoul(region->desc[2]));
-
-		if (not region->desc[3].empty())	// SoilIndex
-			query->setString(4, cp1251_to_utf8(region->desc[3]));
-		
-		if (not region->desc[9].empty())	// TabNum
-			query->setUInt(5, std::stoul(region->desc[9]));
-
-		if (not region->desc[10].empty())	// SoilVarietyNum
-			query->setInt(6, std::stoul(region->desc[10]));
-
-		if (region->type == ST_GEOMETRY::KeywordHash("REGION"))
-		{
-			std::string geom_query("SELECT ST_GeomFromText(\"");
-			geom_query.append(region->geom->getGeomText());
-			geom_query.append("\")");
-
-			auto result{ session->executeQuery(geom_query) };
-			result->first();
-
-			query->setBlob(7, result->getBlob(1));
-		}
-		query->executeUpdate();
-	}
-}
-*/
-void AppForm::LoadGNPSDB()
-{
-	//wxString filename;
-
-	//auto openFileDialog{ new wxFileDialog(this) };
-	//if (wxID_OK == openFileDialog->ShowModal())
-	//	filename = openFileDialog->GetPath();
-
-	//delete openFileDialog;
 }
 
 // ---------------------------------------------------------------------------
@@ -220,17 +109,14 @@ void AppForm::OnFileMenu(wxCommandEvent& event)
 
 	switch (event.GetId())
 	{
-	case wxID_OPEN:
-		LoadZipPackage();
-		break;
 	case 0x3000:
-//		LoadSoilCard();
+		LoadPackages(std::make_shared<wxFileDialog>(this));
 		break;
 	case 0x3001:
-		LoadPackages();
+		LoadPackages(std::make_shared<wxDirDialog>(this));
 		break;
 	case 0x3002:
-		LoadGNPSDB();
+	case 0x3003:
 		break;
 	case wxID_EXIT:
 		Close();
@@ -253,9 +139,10 @@ void AppForm::OnAppMenu(wxCommandEvent& event)
 
 // ---------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(AppForm, wxFrame)
-EVT_MENU(wxID_OPEN,		AppForm::OnFileMenu)
 EVT_MENU(0x3000,			AppForm::OnFileMenu)
 EVT_MENU(0x3001,			AppForm::OnFileMenu)
+EVT_MENU(0x3002,			AppForm::OnFileMenu)
+EVT_MENU(0x3003,			AppForm::OnFileMenu)
 EVT_MENU(wxID_EXIT,		AppForm::OnFileMenu)
 EVT_MENU(wxID_HELP,		AppForm::OnAppMenu)
 EVT_MENU(wxID_ABOUT,	AppForm::OnAppMenu)

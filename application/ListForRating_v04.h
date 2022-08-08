@@ -212,10 +212,10 @@ protected:
 
 public:
   ListForRating();
-  ListForRating(const pugi::xml_document*);
+  ListForRating(std::shared_ptr<pugi::xml_document>);
   ~ListForRating();
 
-  void parse(const pugi::xml_document*) override;
+  void parse(std::shared_ptr<pugi::xml_document>) override;
   void insert(const std::string&) override;
 };
 

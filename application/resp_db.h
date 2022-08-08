@@ -4,6 +4,24 @@
 #include "ListForRating_v05.h"
 #include "ListforRating_except.h"
 
+struct UnpackedFile
+{
+	std::string GUID;
+	std::string Filename;
+	uint64_t FileSize;
+	time_t FileDateTime;
+	int FileCRC;
+	void* FileContent{ nullptr };
+
+	std::string datetime();
+
+	~UnpackedFile()
+	{
+		if (FileContent)
+			delete FileContent;
+	}
+};
+
 class resp_db
 {
 	// --------------------------------------------------------------------------
@@ -21,17 +39,14 @@ class resp_db
 	// --------------------------------------------------------------------------
 	typedef std::pair<std::string, std::string> __GUID;
 	typedef const __GUID& __GUID_cref;
-	typedef std::unique_ptr<pugi::xml_document> xml_document_ptr;
 	
 	// --------------------------------------------------------------------------
-	std::string getGUID();
 	prepared_statement_query_ptr createInsertPtr(const std::string&);
 	bool checkCatalog(const std::string&, const std::string&);
 
 	// --------------------------------------------------------------------------
-	void insertListContent(archfile&);
-	void insertGeometryContent(archfile&);
-	void InsertSpatialData(const __GUID&, const fs::path&);
+	void insertListContent(UnpackedFile&);
+	void insertGeometryContent(UnpackedFile&);
 
 public:
 	resp_db()
@@ -46,7 +61,7 @@ public:
 
 		psInsertCadastralGeometry = createInsertPtr("\
 			cadastral_geometry(GUID, CadastralNumber, `ID`, `Label`, `Note`, `Points`, `Lines`, `Polygons`, `Pen`, `Brush`, `Center`, `Smooth`)\
-				VALUE(?, ?, ?, ?, ?, ?, ?, ST_GeomFromText(?), ?, ?, ?, ?)");
+				VALUE(?, ?, ?, ?, ?, ST_GeomFromText(?), ST_GeomFromText(?), ST_GeomFromText(?), ?, ?, ?, ?)");
 	}
 
 	~resp_db()

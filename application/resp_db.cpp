@@ -1,15 +1,9 @@
-#include "pch.h"
+#include <pch.h>
 #include "resp_db.h"
 
-std::string resp_db::getGUID()
+std::string UnpackedFile::datetime()
 {
-	return xg::newGuid().str();
-}
-
-// ---------------------------------------------------------------------------
-std::string archfile::datetime()
-{
-	return file_datetime::GetDatetime(std::localtime(&fdatetime));
+	return file_datetime::GetDatetime(std::localtime(&FileDateTime));
 }
 
 // ---------------------------------------------------------------------------
@@ -33,16 +27,16 @@ bool resp_db::checkCatalog(const std::string& name, const std::string& code)
 }
 
 // ---------------------------------------------------------------------------
-void resp_db::insertListContent(archfile& file)
+void resp_db::insertListContent(UnpackedFile& file)
 {
 	psInsertListForRating->setString(2, file.GUID);
-	psInsertListForRating->setString(3, file.fname);
+	psInsertListForRating->setString(3, file.Filename);
 	psInsertListForRating->setString(4, file.datetime());
-	psInsertListForRating->setUInt(	 5, file.fsize);
-	psInsertListForRating->setUInt(	 6, file.fcrc);
+	psInsertListForRating->setUInt(	 5, file.FileSize);
+	psInsertListForRating->setUInt(	 6, file.FileCRC);
 	psInsertListForRating->setNull(	 7, sql::DataType::VARCHAR);
 
-	std::stringstream filename{ file.fname };
+	std::stringstream filename{ file.Filename };
 
 	std::string prefix, record_type, category;
 	std::getline(filename, prefix, '_');
@@ -62,14 +56,13 @@ void resp_db::insertListContent(archfile& file)
 	psInsertListForRating->setString(1, file.GUID);
 	psInsertListForRating->executeUpdate();
 
-	auto document{ new pugi::xml_document };
-	if (document->load_buffer(file.fcontent, file.fsize).status != pugi::status_ok)
+	auto document = std::make_shared<pugi::xml_document>();
+	if (document->load_buffer(file.FileContent, file.FileSize).status != pugi::status_ok)
 		throw ListForRatingException(2);
 
-	auto root_node{ document->first_child() };
-	auto nodeName{ root_node.name() };
+	auto root_node = document->first_child();
 
-	if (std::string(nodeName) != "ListForRating")
+	if (!strchk(root_node.name(), "ListForRating"))
 		throw ListForRatingException(3);
 
 	if (std::distance(root_node.attributes().begin(), root_node.attributes().end()) != 1)
@@ -79,9 +72,9 @@ void resp_db::insertListContent(archfile& file)
 
 	switch (std::stoi(root_node.attributes().begin()->value()))
 	{
-	//case 3:
-	//	list = new LFR03::ListForRating;
-	//	break;
+//case 3:
+//	list = new LFR03::ListForRating;
+//	break;
 
 	case 4:
 		list = new LFR04::ListForRating;
@@ -101,26 +94,26 @@ void resp_db::insertListContent(archfile& file)
 	delete list;
 }
 
-void resp_db::insertGeometryContent(archfile& file)
+void resp_db::insertGeometryContent(UnpackedFile& file)
 {
-	__GUID GUID{ getGUID(), "" };
+	__GUID GUID{ LFRTraits::getGUID(), "" };
 
 	psInsertListForRating->setString(1, GUID.first);							// GUID
 	psInsertListForRating->setString(2, file.GUID);								// ParentGUID
-	psInsertListForRating->setString(3, file.fname);							// FileName
+	psInsertListForRating->setString(3, file.Filename);						// FileName
 	psInsertListForRating->setString(4, file.datetime());					// FileDateTime
-	psInsertListForRating->setUInt(	 5, file.fsize);							// FileSize
-	psInsertListForRating->setUInt(	 6, file.fcrc);								// CRC
+	psInsertListForRating->setUInt(	 5, file.FileSize);						// FileSize
+	psInsertListForRating->setUInt(	 6, file.FileCRC);						// CRC
 	psInsertListForRating->setNull(	 7, sql::DataType::VARCHAR);	// Category
 	psInsertListForRating->executeUpdate();
 
-	auto tempZipDirectory = fs::temp_directory_path() / file.fname;
+	auto tempZipDirectory = fs::temp_directory_path() / file.Filename;
 	fs::create_directory(tempZipDirectory);
 
-	auto tempZipFilename = tempZipDirectory / file.fname;
+	auto tempZipFilename = tempZipDirectory / file.Filename;
 
 	std::ofstream tempZipFile(tempZipFilename, std::ios_base::binary);
-	tempZipFile.write((char*)file.fcontent, file.fsize);
+	tempZipFile.write((char*)file.FileContent, file.FileSize);
 	tempZipFile.close();
 
 	lzpp::ZipArchive GeometryFile(tempZipFilename.string());
@@ -144,17 +137,12 @@ void resp_db::insertGeometryContent(archfile& file)
 		tempMapInfoFile.close();
 	}
 
+	GeometryFile.close();
+
 	GUID.second = tempZipDirectory.stem().string();
 	std::replace(GUID.second.begin(), GUID.second.end(), '_', ':');
 
-	InsertSpatialData(GUID, tempMapInfoDirectory);
-
-	fs::remove_all(tempZipDirectory);
-}
-
-void resp_db::InsertSpatialData(const __GUID& GUID, const fs::path& mapInfoDirectory)
-{
-	auto MapInfoDS = (GDALDataset*) GDALOpenEx(mapInfoDirectory.string().c_str(), GDAL_OF_VECTOR, nullptr, nullptr, nullptr);
+	auto MapInfoDS = (GDALDataset*)GDALOpenEx(tempMapInfoDirectory.string().c_str(), GDAL_OF_VECTOR, nullptr, nullptr, nullptr);
 
 	psInsertCadastralGeometry->setString(1, GUID.first);
 	psInsertCadastralGeometry->setString(2, GUID.second);
@@ -196,7 +184,7 @@ void resp_db::InsertSpatialData(const __GUID& GUID, const fs::path& mapInfoDirec
 			for (int iGeomField = 0; iGeomField < LayerFeature->GetGeomFieldCount(); iGeomField++)
 			{
 				auto Geometry = LayerFeature->GetGeomFieldRef(iGeomField);
-				
+
 				if (not Geometry->IsEmpty())
 				{
 					auto wktString = Geometry->exportToWkt();
@@ -216,22 +204,24 @@ void resp_db::InsertSpatialData(const __GUID& GUID, const fs::path& mapInfoDirec
 					}
 				}
 			}
-			
+
 			psInsertCadastralGeometry->executeUpdate();
 		}
 	}
 
 	GDALClose(MapInfoDS);
+
+	fs::remove_all(tempZipDirectory);
 }
 
 // ---------------------------------------------------------------------------
 void resp_db::insert_package(const wxString& filename)
 {
-	fs::path filepath{ std::string(filename) };
-	auto packageFilename{ filepath.filename().string() };
-	auto packageDateTime{ file_datetime::GetDatetime(filepath) };
-	auto packageFileSize{ fs::file_size(filepath) };
-	auto packageContent = std::make_unique<char[]>(packageFileSize);
+	auto packageFilePath{ fs::path(filename.ToStdString()) };
+	auto packageFilename{ packageFilePath.filename().string() };
+	auto packageDateTime{ file_datetime::GetDatetime(packageFilePath) };
+	auto packageFileSize{ fs::file_size(packageFilePath) };
+	auto packageContent { std::make_unique<char[]>(packageFileSize) };
 
 	std::ifstream infile(std::string(filename), std::ios_base::binary);
 	infile.read(packageContent.get(), packageFileSize);
@@ -242,25 +232,27 @@ void resp_db::insert_package(const wxString& filename)
 	{
 		wxString message;
 		message.append("Ошибка открытия файла: ");
-		message.append(filepath.filename().string());
+		message.append(packageFilePath.filename().string());
 
 		wxMessageBox(message, "Ошибка доступа к файлу", wxOK | wxICON_ERROR);
-		return;
+			return;
 	}
 
-	auto Off{ packageFilename.find("list") + 5 };
-	auto Count{ packageFilename.find(".zip") - Off };
+	auto ofs = packageFilename.find("list") + 5;
+	auto cnt = packageFilename.find(".zip") - ofs;
 
-	if (Count != 36)
+	if (cnt != 36)
 		return;
 
 	__GUID GUID	{
-		packageFilename.substr(Off, Count),
+		packageFilename.substr(ofs, cnt),
 		packageFilename
 	};
 
 	membuf packageStreamBuffer(packageContent.get(), packageContent.get() + packageFileSize);
 	std::istream packageContentStream(&packageStreamBuffer);
+
+	session->execute("START TRANSACTION");
 
 	psInsertList->setString(1, GUID.first);
 	psInsertList->setString(2, GUID.second);
@@ -269,26 +261,27 @@ void resp_db::insert_package(const wxString& filename)
 	psInsertList->setBlob(	5, &packageContentStream);
 	psInsertList->executeUpdate();
 
- 	for (auto& it : package.getEntries())
+	for (auto& it : package.getEntries())
 	{
-		filepath = fs::path(it.getName());
+		packageFilePath = fs::path(it.getName());
+		auto packageFileExt{ packageFilePath.extension() };
 
-		archfile file{
+		UnpackedFile MapInfoFile {
 			GUID.first,
-			filepath.filename().string(),
+			packageFilePath.filename().string(),
 			it.getSize(),
 			it.getDate(),
 			it.getCRC(),
 			it.readAsBinary()
 		};
 
-		auto ext = filepath.extension();
-
-		if (ext == ".xml")
-			insertListContent(file);
-		else if (ext == ".zip")
-			insertGeometryContent(file);
+		if (packageFileExt == ".xml")
+			insertListContent(MapInfoFile);
+		else if (packageFileExt == ".zip")
+			insertGeometryContent(MapInfoFile);
 	}
+
+	session->execute("COMMIT");
 
 	package.close();
 }

@@ -18,6 +18,7 @@
 #include <exception>
 #include <algorithm>
 #include <filesystem>
+#include <type_traits>
 
 #define WXUSINGDLL
 #include "wx/wxprec.h"
@@ -41,4 +42,3 @@
 namespace fs      = std::filesystem;
 namespace lzpp    = libzippp;
 namespace chrono  = std::chrono;
-
